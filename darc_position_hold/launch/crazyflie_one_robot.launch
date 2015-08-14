@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+<launch>
+    <!--<arg name="bagData" default="false"/>-->
+    <arg name="ROBOT_NAME" default="quad1"/> 
+    <arg name="crazyflieSDK" default="~/crazyflie-clients-python/lib" />
+    <!--<arg name="uri" default="radio://0/80/2M" />-->
+    <arg name="bagData" default = "false"/>
+    
+    <!-- Quad 1 Yellow -->
+    <!--<arg name="uri" default="radio://0/72/2M" />-->
+    
+    <!-- Quad 2 Red -->
+    <arg name="uri" default="radio://0/80/2M" />-->
+    
+    <!-- Quad 3 Blue-->
+    <!--<arg name="uri" default="radio://0/42/2M" />-->
+    
+    <arg name="joy_dev" default="/dev/input/js0" />
+    
+    <arg name="VRPN_IP" default="155.98.9.183"/>   
+          
+    <!-- waypoint parameters -->
+    <arg name="timedLoop" default="1"/>
+    <arg name="loopTiming" default="0.1"/>
+	<!-- 1 == square, 2 == triangle, 3 ==  proximity effects test, 4 == circle -->
+    <arg name="shapeArg" default="4"/> 
+
+    <!-- Thrust PID Gains -->
+    <arg name="tP" default="3.0"/>  
+    <arg name="tI" default="0.03"/>
+    <arg name="tD" default="0.75"/>
+    
+    <!-- Roll PID Gains -->
+    <arg name="rP" default="1.3"/>  <!-- 1.15 -->
+    <arg name="rI" default="0.0025"/> <!-- 0.002 -->
+    <arg name="rD" default="0.9"/>   <!-- 0.8 -->
+    
+    <!-- Pitch PID Gains -->
+    <arg name="pP" default="1.3"/>
+    <arg name="pI" default="0.0025"/>
+    <arg name="pD" default="0.9"/>
+    
+    <!-- Yaw PID Gains -->
+    <arg name="yP" default="3.0"/>  <!-- 4.0  -->
+    <arg name="yI" default="0.0"/>  <!-- 0.0  -->
+    <arg name="yD" default="0.2"/> <!-- 0.25 -->
+
+  
+    <include file="$(find crazyflie)/launch/crazyflie_server.launch">
+        <arg name="crazyflieSDK" value="$(arg crazyflieSDK)" />
+    </include>
+
+    <node pkg="ros_vrpn_client" name="$(arg ROBOT_NAME)" type="ros_vrpn_client" args="_vrpn_server_ip:=$(arg VRPN_IP)" required="true" /> -->
+   
+     <group ns="$(arg ROBOT_NAME)">
+        <param name="thrustP" value="$(arg tP)"/>
+        <param name="thrustI" value="$(arg tI)"/>
+        <param name="thrustD" value="$(arg tD)"/>
+        <param name="rollP" value="$(arg rP)"/>
+        <param name="rollI" value="$(arg rI)"/>
+        <param name="rollD" value="$(arg rD)"/>
+        <param name="pitchP" value="$(arg pP)"/>
+        <param name="pitchI" value="$(arg pI)"/>
+        <param name="pitchD" value="$(arg pD)"/>
+        <param name="yawP" value="$(arg yP)"/>
+        <param name="yawI" value="$(arg yI)"/>
+        <param name="yawD" value="$(arg yD)"/>
+        <param name="timed_loop" value="$(arg timedLoop)"/>
+        <param name="waypoint_timestep" value="$(arg loopTiming)"/>
+        <param name="robot_name" value="$(arg ROBOT_NAME)"/>b
+        <param name="trajectory_shape" value="$(arg shapeArg)"/>
+        <include file="$(find crazyflie)/launch/crazyflie_add.launch">
+            <arg name="uri" value="$(arg uri)" />
+            <arg name="tf_prefix" value="$(arg ROBOT_NAME)" />
+        </include>
+        <param name="mocap_name" value="$(arg ROBOT_NAME)"/>
+        <node pkg = "darc_mocap"    type="mocap"    name="Mocap"    respawn="true" output="screen"/>
+        <node pkg="joy" type="joy_node" name="Xbox_Controller" args="$(arg joy_dev)" respawn="true"/>
+        <node pkg = "darc_waypoints"     type="waypoint_generator" name="Waypoints" respawn = "true"/>
+        <node pkg = "darc_manual_fly" type="darc_manual_fly_node" name="Control" respawn="true"/>
+        <node pkg = "darc_position_hold" type="position_hold" name="Pos_Hold"  respawn = "true"     output="screen"/>    
+        <node pkg = "darc_crazyflie" type="darc_crazyflie_node" name="darc_crazyflie" respawn = "true" output = "screen"/>   
+    </group>-->
+    
+        <node if ="$(arg bagData)" pkg="rosbag" type="record" name="record" output="screen"
+        args = "-o /home/darc/catkin_ws/groundEffectBags/circleTrajectory /quad1/current_position /quad1/current_r /quad1/desired_position /quad1/new_u /quad1/cmd_vel /quad1/battery" />-->
+
+	<!--<node if ="$(arg bagData)" pkg="rosbag" type="record" name="record" output="screen"
+        args = "-o /home/darc/catkin_ws/groundEffectBags/circleTrajectory -a" />-->
+</launch>

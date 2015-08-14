@@ -1,0 +1,31 @@
+4/28/15
+Working input gains with hopping
+
+
+  <arg name="pd" default="0.25"/>
+    <param name="pd_ratio" value="$(arg pd)"/>
+
+    <arg name="pi" default="0.005"/>
+    <param name="pi_ratio" value="$(arg pi)"/>
+    
+    <!-- This is the error about the roll along the y axis-->
+    <!-- 20.0 was last tested -->
+    <arg name="kx" default="1.5"/>
+    <param name="x_gain" value="$(arg kx)"/>
+    
+    <!-- This is the error about the pitch along the x axis-->
+    <!-- 20.0 was last tested -->
+    <arg name="ky" default="1.0"/>
+    <param name="y_gain" value="$(arg ky)"/>
+
+    <!-- This is the thrust error in Z--> 
+    <!-- 15 was working okay -->
+    
+    <arg name="kz" default="4.0"/>
+    <param name="z_gain" value="$(arg kz)"/>
+
+    <!-- This is just pure yaw error (make sure to zero in mocap software)-->
+    <arg name="kyaw" default="5.0"/>
+    <param name="yaw_gain" value="$(arg kyaw)"/>
+
+
